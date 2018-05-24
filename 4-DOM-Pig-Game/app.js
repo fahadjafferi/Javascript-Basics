@@ -9,31 +9,23 @@ GAME RULES:
 
 */
 
-var scores, roundScores, activePlayer;
+var scores, roundScores, activePlayer, gamePlaying;
 
 init();
 
-//document.querySelector('#current-' + activePlayer).textContent = dice;
-//document.querySelector('#current-' + activePlayer).innerHTML = '<em>' + dice + '</em>';
-
-//var x = document.querySelector('#score-0').textContent;
-//console.log(x);
-
-
-
-
 
 document.querySelector('.btn-roll').addEventListener('click', function() {
-    
-    //1. Random Numnber
+    if (gamePlaying) {
+        //1. Random Numnber
     var dice = Math.floor(Math.random() * 6) + 1;
     
     //2. Display the result
-    var  diceDOM = document.querySelector('.dice')
+    var  diceDOM = document.querySelector('.dice');
     diceDOM.style.display = 'block';
     diceDOM.src = 'dice-' + dice + '.png';
     
     //3. Update the round score IF the rolled number was not a 1
+    // !== different operator
     if (dice !== 1) {
         //Add Score
         roundScore += dice;
@@ -43,12 +35,17 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
         nextPlayer();
         
     }
+        
+  }
+      
 });
+
 
 // add event listener...when button hold is clicked on then update the score for the current player.
 document.querySelector('.btn-hold').addEventListener('click', function() {
-    //Add Current score to Global Score
-    scores[activePlayer] += roundScore;
+    if (gamePlaying) {
+        //Add Current score to Global Score
+      scores[activePlayer] += roundScore;
     
     
     //Update the UI
@@ -60,13 +57,15 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
         document.querySelector('.dice').style.display = 'none';
         document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
         document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
-                               
+        gamePlaying = false;                       
     } else {
         //Next Player
-    nextPlayer();
+        nextPlayer();
     }
+
+ }
     
-})
+});
 
 // DRY principal, dont repeat yourself.
 function nextPlayer() {
@@ -95,6 +94,7 @@ function init() {
     scores = [0,0];
     roundScore = 0;
     activePlayer = 0;
+    gamePlaying = true;
     
     //Select class dice and set dislay of dice to none. dice will not display.
     document.querySelector('.dice').style.display = 'none';
@@ -113,3 +113,11 @@ function init() {
     document.querySelector('.player-0-panel').classList.add('active');
     
 }
+
+
+
+//document.querySelector('#current-' + activePlayer).textContent = dice;
+//document.querySelector('#current-' + activePlayer).innerHTML = '<em>' + dice + '</em>';
+
+//var x = document.querySelector('#score-0').textContent;
+//console.log(x);
